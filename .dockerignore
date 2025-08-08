@@ -1,0 +1,10 @@
+# Referenciam-se ao ambiente de desenvolvimento
+.vscode/
+tmp/
+
+# Referenciam-se ao ambiente de desenvolvimento
+**/.docker/postgres/**dbdata*
+
+# Log files
+*.log
+

@@ -1,0 +1,23 @@
+# Referenciam-se ao ambiente de desenvolvimento
+.vscode/
+tmp/
+
+# Referenciam-se ao ambiente de desenvolvimento
+**/.docker/postgres/**dbdata*
+
+
+# Log files
+*.log
+
+# Applications
+*.app
+*.exe
+*.war
+
+# Large media files
+*.mp4
+*.tiff
+*.avi
+*.flv
+*.mov
+*.wmv
