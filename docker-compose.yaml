@@ -1,19 +1,63 @@
 services:
-  sonarqube:
-    build: 
+  infra_postgres:
+    build:
+      context: .docker/postgres
+    container_name: infra_postgres_db
+    labels:
+      project: "infrastructure"
+      service: "database"
+    ports:
+      - "3500:5432" 
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: sonarqube
+      POSTGRES_USER: sonar
+      POSTGRES_PASSWORD: ThisIsLocal-NoNeed2Worry!
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U sonar -d sonarqube"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    volumes:
+      - infra_postgres_data:/var/infra_esql/data
+    networks:
+      - infra_net
+
+  infra_sonar:
+    build:
       context: .docker/sonarqube
-    container_name: sonarqube
+    container_name: infra_sonarqube
+    labels:
+      project: "infrastructure"
+      service: "sonarqube"
     ports:
       - "9000:9000"
-    depends_on:
-      - postgres_sonar
     environment:
-      - SONAR_JDBC_URL=jdbc:postgresql://postgres_sonar:3500/sonar
-      - SONAR_JDBC_USERNAME=sonar
-      - SONAR_JDBC_PASSWORD=thisislocal-noneedtoworry
+      SONAR_JDBC_URL: jdbc:postgresql://infra_postgres:5432/sonarqube
+      SONAR_JDBC_USERNAME: sonar
+      SONAR_JDBC_PASSWORD: ThisIsLocal-NoNeed2Worry!
+    restart: unless-stopped
+    depends_on:
+      infra_postgres:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:9000/status || exit 1"]
+      interval: 30s
+      timeout: 20s
+      retries: 10
     volumes:
-      - .docker/sonarqube/sonarqube_data:/opt/sonarqube/data
-      - .docker/sonarqube/sonarqube_extensions:/opt/sonarqube/extensions
-      - .docker/sonarqube/sonarqube_logs:/opt/sonarqube/logs
+      - infra_sonarqube_data:/opt/sonarqube/data
+      - infra_sonarqube_extensions:/opt/sonarqube/extensions
+      - infra_sonarqube_logs:/opt/sonarqube/logs
+    networks:
+      - infra_net
 
-# Note: postgres_sonar is defined in ../postgres/docker-compose.yml
+volumes:
+  infra_postgres_data:
+  infra_sonarqube_data:
+  infra_sonarqube_extensions:
+  infra_sonarqube_logs:
+
+networks:
+  infra_net:
+    driver: bridge
