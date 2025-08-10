@@ -2,10 +2,15 @@
 SONAR_COMPOSE=docker-compose.yaml
 
 # 🎯 Targets
-.PHONY: up down build logs clean postgres-up postgres-down sonar-up sonar-down cloud stop-postgres stop-sonar
+.PHONY: up down build logs clean postgres-up postgres-down sonar-up sonar-down cloud stop-postgres stop-sonar build-and-up
 
+## 🔨 Build all services
 build:
 	docker compose --project-name=cloud -f $(SONAR_COMPOSE) build
+
+## 🔨 Build and start all services
+build-and-up:
+	docker compose --project-name=cloud -f $(SONAR_COMPOSE) up --build --force-recreate
 
 ## ☁️ Start compose with cloud flag
 cloud:

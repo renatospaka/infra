@@ -23,6 +23,7 @@ make down
 
 ### Main Operations
 - `make up` - Start all services with dependency management
+- `make build-and-up` - Build all images and start services
 - `make cloud` - Start services with force recreate (cloud deployment)
 - `make down` - Stop all services
 - `make build` - Build all images
@@ -35,6 +36,28 @@ make down
 
 ### Monitoring
 - `make logs` - Follow SonarQube logs
+
+## 🎯 Selective Service Management
+
+You can start specific services using the available Make commands:
+
+```bash
+# Start only PostgreSQL
+make postgres-up
+
+# Start only SonarQube (will automatically start PostgreSQL due to dependency)
+make sonar-up
+
+# Stop individual services
+make postgres-down
+make sonar-down
+
+# Alternative stop commands
+make stop-postgres
+make stop-sonar
+```
+
+**Note:** Due to the `depends_on` configuration, starting SonarQube will automatically start PostgreSQL first, but you can start PostgreSQL independently if you only need the database.
 
 ## 🌐 Service Access
 

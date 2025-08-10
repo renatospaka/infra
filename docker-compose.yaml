@@ -2,7 +2,6 @@ services:
   infra_postgres:
     build:
       context: .docker/postgres
-    container_name: infra_postgres_db
     labels:
       project: "infrastructure"
       service: "database"
@@ -26,7 +25,6 @@ services:
   infra_sonar:
     build:
       context: .docker/sonarqube
-    container_name: infra_sonarqube
     labels:
       project: "infrastructure"
       service: "sonarqube"
