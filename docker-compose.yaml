@@ -6,7 +6,7 @@ services:
       project: "infrastructure"
       service: "multidatabase"
     ports:
-      - "3500:5432"
+      - "3400:5432"
     restart: unless-stopped
     environment:
       POSTGRES_DB: dummy

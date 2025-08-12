@@ -1,9 +1,8 @@
 -- Initialization script for multidatabase PostgreSQL setup
--- Create databases: dummy, sonarqube, keycloak
--- Create users: dummy, sonar, keycloak
+-- Create databases: sonarqube, keycloak
+-- Create users: sonar, keycloak
 -- Set passwords
 
-CREATE DATABASE dummy;
 CREATE DATABASE sonarqube;
 CREATE DATABASE keycloak;
 
