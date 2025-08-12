@@ -62,16 +62,46 @@ make stop-sonar
 ## 🌐 Service Access
 
 - **SonarQube**: http://localhost:9000
-- **PostgreSQL**: localhost:3500
+- **PostgreSQL**: http://localhost:3400
 
 ## 🗃️ Database Configuration
+## ➕ Adding a New PostgreSQL Database to the Multidatabase Instance
+
+To add a new database to the `infra_postgres_multi` instance:
+
+1. Edit the initialization script at `.docker/postgres/init-scripts/01-init-multidb.sql` and add a line:
+	```sql
+	CREATE DATABASE <your_database_name>;
+	```
+	Optionally, add a user and grant privileges:
+	```sql
+	DO $$
+	BEGIN
+		 IF NOT EXISTS (SELECT FROM pg_catalog.pg_roles WHERE rolname = '<your_user>') THEN
+			  CREATE ROLE <your_user> LOGIN PASSWORD '<your_password>';
+		 END IF;
+	END$$;
+	GRANT ALL PRIVILEGES ON DATABASE <your_database_name> TO <your_user>;
+	```
+
+2. Remove the `cloud_infra_postgres_multi_data` volume to trigger re-initialization:
+	```bash
+	make postgres-force-clean
+	```
+
+3. Rebuild and start the services:
+	```bash
+	make build-and-up
+	```
+
+This will recreate the database and user on the next container startup.
 ## 🗃️ Database Configuration
 
 **SonarQube Database:**
 - Database: `sonarqube`
 - User: `sonar`
 - Password: `ThisIsLocal-NoNeed2Worry!`
-- Port: `3500`
+- Port: `3400`
 
 ## 🏷️ Project Naming
 
