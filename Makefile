@@ -100,7 +100,6 @@ sonar-up:
 sonar-down:
 	docker compose --project-name=cloud -f $(CLOUD_COMPOSE) stop infra_sonar
 
-
 ## Show SonarQube logs
 sonar-logs:
 	docker compose --project-name=cloud -f $(CLOUD_COMPOSE) logs -f infra_sonar
@@ -108,3 +107,23 @@ sonar-logs:
 ## Connect to SonarQube container (shell)
 sonar-connect:
 	docker compose --project-name=cloud -f $(CLOUD_COMPOSE) exec -it infra_sonar /bin/bash
+
+#
+# Keycloak (infra_keycloak)
+.PHONY: keycloak-up keycloak-down keycloak-logs keycloak-connect
+
+## Start only Keycloak service
+keycloak-up:
+	docker compose --project-name=cloud -f $(CLOUD_COMPOSE) up -d infra_keycloak
+
+## Stop only Keycloak service
+keycloak-down:
+	docker compose --project-name=cloud -f $(CLOUD_COMPOSE) stop infra_keycloak
+
+## Show Keycloak logs
+keycloak-logs:
+	docker compose --project-name=cloud -f $(CLOUD_COMPOSE) logs -f infra_keycloak
+
+## Connect to Keycloak container (shell)
+keycloak-connect:
+	docker compose --project-name=cloud -f $(CLOUD_COMPOSE) exec -it infra_keycloak /bin/bash

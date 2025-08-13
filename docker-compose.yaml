@@ -22,6 +22,7 @@ services:
       - ./.docker/postgres/init-scripts:/docker-entrypoint-initdb.d
     networks:
       - infra_net
+
   infra_sonar:
     build:
       context: .docker/sonarqube
@@ -50,11 +51,43 @@ services:
     networks:
       - infra_net
 
+  infra_keycloak:
+    build:
+      context: .docker/keycloak
+    labels:
+      project: "infrastructure"
+      service: "keycloak"
+      database: "keycloak"
+    ports:
+      - "4000:8080"
+    environment:
+      KC_DB: postgres
+      KC_DB_URL: jdbc:postgresql://infra_postgres_multi:5432/keycloak
+      KC_DB_USERNAME: keycloak
+      KC_DB_PASSWORD: ThisIsLocal-NoNeed2Worry!
+      KEYCLOAK_ADMIN: keycloakadm
+      KEYCLOAK_ADMIN_PASSWORD: ThisIsLocal-NoNeed2Worry!
+    command: start-dev
+    depends_on:
+      infra_postgres_multi:
+        condition: service_healthy
+    healthcheck:
+      # test: ["CMD-SHELL", "curl -f http://localhost:8080/ || exit 1"]
+      test: ["CMD-SHELL", "echo > /dev/tcp/localhost/8080"]
+      interval: 30s
+      timeout: 20s
+      retries: 10
+    volumes:
+      - infra_keycloak_data:/opt/keycloak/data
+    networks:
+      - infra_net
+
 volumes:
   infra_postgres_multi_data:
   infra_sonarqube_data:
   infra_sonarqube_extensions:
   infra_sonarqube_logs:
+  infra_keycloak_data:
 
 networks:
   infra_net:

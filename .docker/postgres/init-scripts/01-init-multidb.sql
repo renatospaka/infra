@@ -28,5 +28,7 @@ GRANT ALL PRIVILEGES ON DATABASE sonarqube TO sonar;
 GRANT ALL PRIVILEGES ON DATABASE keycloak TO keycloak;
 
 \connect sonarqube
+GRANT ALL PRIVILEGES ON SCHEMA public TO sonar;
 
 \connect keycloak
+GRANT ALL PRIVILEGES ON SCHEMA public TO keycloak;
