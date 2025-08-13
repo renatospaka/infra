@@ -81,6 +81,39 @@ make stop-keycloak
 - **PostgreSQL**: http://localhost:3400
 
 ## 🗃️ Database Configuration
+
+**Dummy Database (for DBeaver setup):**
+- Database: `dummy`
+- User: `dummy`
+- Password: `ThisIsLocal-NoNeed2Worry!`
+- Port: `3400`
+
+### Connecting to the dummy database with DBeaver
+
+1. **Open DBeaver and click 'New Database Connection'.**
+2. **Select 'PostgreSQL' as the database type.**
+3. **Fill in the connection details:**
+	- **Host:** `localhost`
+	- **Port:** `3400`
+	- **Database:** `dummy`
+	- **Username:** `dummy`
+	- **Password:** `ThisIsLocal-NoNeed2Worry!`
+4. **Test the connection and click 'Finish'.**
+
+You can now browse, query, and manage the dummy database using DBeaver's graphical interface.
+
+**Sonarqube Database:**
+- Database: `sonarqube`
+- User: `sonar`
+- Password: `ThisIsLocal-NoNeed2Worry!`
+- Port: `3400`
+
+**Keycloak Database:**
+- Database: `keycloak`
+- User: `keycloak`
+- Password: `ThisIsLocal-NoNeed2Worry!`
+- Port: `3400`
+
 ## ➕ Adding a New PostgreSQL Database to the Multidatabase Instance
 
 To add a new database to the `infra_postgres_multi` instance:
@@ -112,19 +145,11 @@ To add a new database to the `infra_postgres_multi` instance:
 
 This will recreate the database and user on the next container startup.
 
-## 🗃️ Database Configuration
-
-**SonarQube Database:**
 - Database: `sonarqube`
 - User: `sonar`
 - Password: `ThisIsLocal-NoNeed2Worry!`
 - Port: `3400`
 
-**Keycloak Database:**
-- Database: `keycloak`
-- User: `keycloak`
-- Password: `ThisIsLocal-NoNeed2Worry!`
-- Port: `3400`
 
 ## 🏷️ Project Naming
 
