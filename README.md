@@ -1,13 +1,21 @@
 # Cloud Local Infrastructure
 
-This project provisions a self-contained local infrastructure, simulating a cloud environment. The containerized setup includes a PostgreSQL database and SonarQube, designed to support code quality analysis and development.
+
+This project provisions a self-contained local infrastructure, simulating a cloud environment. The containerized setup includes a PostgreSQL database, SonarQube, and Keycloak.
+
+- **PostgreSQL** provides a robust, open-source relational database engine, supporting multiple databases for different services in your local cloud. It enables reliable data storage, transactional integrity, and advanced querying for development and testing.
+
+- **SonarQube** delivers automated code quality and security analysis, helping you identify bugs, vulnerabilities, and code smells early in the development process. It integrates with your CI/CD pipeline and provides actionable feedback for continuous improvement.
+
+- **Keycloak** provides identity and access management, enabling secure authentication and user management for your local cloud services.
 
 ⚠️ WARNING: This project is for development purposes only. Do not use this environment in QA, homologation, or production.
 
 ## 🏗️ Services
 
-- **PostgreSQL 14** (14.15-alpine3.21) - Database server
+- **PostgreSQL 14** (14.15-alpine3.21) - Multi-database server
 - **SonarQube** (2025.4.2-developer) - Code quality and security analysis platform
+- **Keycloak** (24.0.3) - Identity and access management
 
 ## 🚀 Quick Start
 
@@ -32,10 +40,12 @@ make down
 ### Individual Service Management
 - `make postgres-up` / `make postgres-down` - PostgreSQL service control
 - `make sonar-up` / `make sonar-down` - SonarQube service control
-- `make stop-postgres` / `make stop-sonar` - Alternative stop commands
+- `make keycloak-up` / `make keycloak-down` - Keycloak service control
+- `make stop-postgres` / `make stop-sonar` / `make stop-keycloak` - Alternative stop commands
 
 ### Monitoring
 - `make logs` - Follow SonarQube logs
+- `make keycloak-logs` - Follow Keycloak logs
 
 ## 🎯 Selective Service Management
 
@@ -48,20 +58,26 @@ make postgres-up
 # Start only SonarQube (will automatically start PostgreSQL due to dependency)
 make sonar-up
 
+# Start only Keycloak (will automatically start PostgreSQL due to dependency)
+make keycloak-up
+
 # Stop individual services
 make postgres-down
 make sonar-down
+make keycloak-down
 
 # Alternative stop commands
 make stop-postgres
 make stop-sonar
+make stop-keycloak
 ```
 
-**Note:** Due to the `depends_on` configuration, starting SonarQube will automatically start PostgreSQL first, but you can start PostgreSQL independently if you only need the database.
+**Note:** Due to the `depends_on` configuration, starting SonarQube or Keycloak will automatically start PostgreSQL first, but you can start PostgreSQL independently if you only need the database.
 
 ## 🌐 Service Access
 
 - **SonarQube**: http://localhost:9000
+- **Keycloak**: http://localhost:4000
 - **PostgreSQL**: http://localhost:3400
 
 ## 🗃️ Database Configuration
@@ -95,11 +111,18 @@ To add a new database to the `infra_postgres_multi` instance:
 	```
 
 This will recreate the database and user on the next container startup.
+
 ## 🗃️ Database Configuration
 
 **SonarQube Database:**
 - Database: `sonarqube`
 - User: `sonar`
+- Password: `ThisIsLocal-NoNeed2Worry!`
+- Port: `3400`
+
+**Keycloak Database:**
+- Database: `keycloak`
+- User: `keycloak`
 - Password: `ThisIsLocal-NoNeed2Worry!`
 - Port: `3400`
 
@@ -110,17 +133,20 @@ All containers and resources are created with the project name `cloud` for easy 
 - Network: `cloud_infra_net`
 - Volumes: `cloud_infra_postgres_data`, `cloud_infra_sonarqube_*`
 
+
 ## 🔍 Container Management
 
 ```bash
 # List project containers
-docker ps --filter "label=com.docker.compose.project=cloud"
+docker container ls --filter "label=com.docker.compose.project=cloud"
 
 # Monitor resources
-docker stats $(docker ps -q --filter "label=com.docker.compose.project=cloud")
+docker container stats $(docker container ls -q --filter "label=com.docker.compose.project=cloud")
 ```
+
 
 ## 🏥 Health Checks
 
 - **PostgreSQL**: Ready check via `pg_isready`
 - **SonarQube**: HTTP status endpoint check with automatic dependency on PostgreSQL health
+- **Keycloak**: TCP port check for service readiness
