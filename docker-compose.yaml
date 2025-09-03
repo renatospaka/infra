@@ -22,6 +22,8 @@ services:
       - ./.docker/postgres/init-scripts:/docker-entrypoint-initdb.d
     networks:
       - infra_net
+    extra_hosts:
+      - host.docker.internal:host-gateway
 
   infra_sonar:
     build:
@@ -50,6 +52,8 @@ services:
       - infra_sonarqube_logs:/opt/sonarqube/logs
     networks:
       - infra_net
+    extra_hosts:
+      - host.docker.internal:host-gateway
 
   infra_keycloak:
     build:
@@ -81,6 +85,8 @@ services:
       - infra_keycloak_data:/opt/keycloak/data
     networks:
       - infra_net
+    extra_hosts:
+      - host.docker.internal:host-gateway
 
 volumes:
   infra_postgres_multi_data:
