@@ -90,7 +90,11 @@ database-sonar-connect:
 
 #
 # SonarQube (infra_sonar)
-.PHONY: sonar-up sonar-down sonar-logs sonar-connect
+.PHONY: sonar-build sonar-up sonar-down sonar-logs sonar-connect
+
+## Build only SonarQube service
+sonar-build:
+	docker compose --project-name=cloud -f $(CLOUD_COMPOSE) build infra_sonar
 
 ## Start only SonarQube service
 sonar-up:
