@@ -1,1 +1,1 @@
-FROM sonarqube:26.6.0.123539-community
+FROM sonarqube:25.12.0.117093-community
